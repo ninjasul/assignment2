@@ -1,16 +1,17 @@
 package com.assignment.support.service;
 
 import com.assignment.support.repository.SupportRepository;
-import com.assignment.support.repository.SupportRepositorySupport;
 import com.assignment.support.entity.Region;
 import com.assignment.support.entity.Support;
 import com.assignment.support.dto.SupportDto;
 import com.assignment.support.dto.RegionDto;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -23,9 +24,6 @@ public class SupportService {
     @Autowired
     private SupportRepository supportRepository;
 
-    @Autowired
-    private SupportRepositorySupport supportRepositorySupport;
-
     public List<SupportDto> findAll() {
         return Optional.ofNullable(supportRepository.findAll())
                 .orElseThrow(EntityNotFoundException::new)
@@ -35,7 +33,7 @@ public class SupportService {
     }
 
     public SupportDto findByRegionName(RegionDto requestDto) {
-        return Optional.ofNullable(supportRepositorySupport.findByRegionName(new Region(null, requestDto.getRegion())))
+        return Optional.ofNullable(supportRepository.findByRegionName(new Region(null, requestDto.getRegion())))
                         .map(SupportDto::of)
                         .orElseThrow(EntityNotFoundException::new);
 
@@ -45,7 +43,7 @@ public class SupportService {
     public SupportDto updateByRegionName(SupportDto supportDto) {
         Support updatedSupport = Support.of(supportDto);
 
-        Support original = Optional.ofNullable(supportRepositorySupport.findByRegionName(updatedSupport.getRegion()))
+        Support original = Optional.ofNullable(supportRepository.findByRegionName(updatedSupport.getRegion()))
                                     .orElseThrow(EntityNotFoundException::new);
         original.update(supportDto);
 

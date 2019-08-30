@@ -17,20 +17,20 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class SupportRepositorySupportTest extends BaseRepositoryTest {
 
     @Autowired
-    private SupportRepositorySupport supportRepositorySupport;
+    private SupportRepository supportRepository;
 
     @Test(expected = InvalidDataAccessApiUsageException.class)
     public void findByRegionName_for_null_region() {
         Region region = new Region(null, null);
 
-        supportRepositorySupport.findByRegionName(region);
+        supportRepository.findByRegionName(region);
     }
 
     @Test
     public void findByRegionName_for_empty_region() {
         Region region = new Region(null, "");
 
-        Support foundSupport = supportRepositorySupport.findByRegionName(region);
+        Support foundSupport = supportRepository.findByRegionName(region);
 
         assertThat(foundSupport).isNull();
     }
@@ -39,7 +39,7 @@ public class SupportRepositorySupportTest extends BaseRepositoryTest {
     public void findByRegionName_for_wrong_region() {
         Region region = new Region(null, "뉴욕시");
 
-        Support foundSupport = supportRepositorySupport.findByRegionName(region);
+        Support foundSupport = supportRepository.findByRegionName(region);
 
         assertThat(foundSupport).isNull();
     }
@@ -47,7 +47,7 @@ public class SupportRepositorySupportTest extends BaseRepositoryTest {
     @Test
     public void findByRegionName() {
         for (int i = 0; i < supports.size(); ++i ) {
-            Support foundSupport = supportRepositorySupport.findByRegionName(supports.get(i).getRegion());
+            Support foundSupport = supportRepository.findByRegionName(supports.get(i).getRegion());
 
             assertThat(foundSupport).isNotNull();
             assertThat(foundSupport.getRegion().getCode()).isEqualTo(supports.get(i).getRegion().getCode());

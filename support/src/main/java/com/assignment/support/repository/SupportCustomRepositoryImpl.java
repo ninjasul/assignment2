@@ -8,18 +8,21 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 @Slf4j
-public class SupportRepositorySupport extends QuerydslRepositorySupport {
+public class SupportCustomRepositoryImpl extends QuerydslRepositorySupport implements SupportCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
-    public SupportRepositorySupport(JPAQueryFactory queryFactory) {
+    public SupportCustomRepositoryImpl(JPAQueryFactory queryFactory) {
         super(Support.class);
         this.queryFactory = queryFactory;
     }
 
+    @Override
     public Support findByRegionName(Region region) {
         return queryFactory.selectFrom(QSupport.support)
                 .innerJoin(QRegion.region).on(QSupport.support.region.code.eq(QRegion.region.code))

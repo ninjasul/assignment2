@@ -7,22 +7,25 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
+@Transactional
 @Slf4j
-public class RegionRepositorySupport extends QuerydslRepositorySupport {
+public class RegionCustomRepositoryImpl extends QuerydslRepositorySupport implements RegionCustomRepository {
 
     private final JPAQueryFactory queryFactory;
 
     private static final QRegion $ = QRegion.region;
 
-    public RegionRepositorySupport(JPAQueryFactory queryFactory) {
+    public RegionCustomRepositoryImpl(JPAQueryFactory queryFactory) {
         super(Region.class);
         this.queryFactory = queryFactory;
     }
 
+    @Override
     public List<Region> findBestRegions(int count) {
         return queryFactory.selectFrom($)
                 .innerJoin(QSupport.support).on($.code.eq(QSupport.support.region.code))
@@ -31,6 +34,7 @@ public class RegionRepositorySupport extends QuerydslRepositorySupport {
                 .fetch();
     }
 
+    @Override
     public Region findSmallestMaxRateRegion() {
         return queryFactory.selectFrom($)
                 .innerJoin(QSupport.support).on($.code.eq(QSupport.support.region.code))

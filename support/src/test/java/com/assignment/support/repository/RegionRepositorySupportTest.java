@@ -1,7 +1,6 @@
 package com.assignment.support.repository;
 
 import com.assignment.support.entity.Region;
-import com.assignment.support.entity.Support;
 import com.assignment.support.base.BaseRepositoryTest;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,9 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -21,7 +18,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class RegionRepositorySupportTest extends BaseRepositoryTest {
 
     @Autowired
-    private RegionRepositorySupport regionRepositorySupport;
+    private RegionCustomRepositoryImpl regionRepositorySupport;
 
 
     @Test(expected = InvalidDataAccessApiUsageException.class)

@@ -1,11 +1,13 @@
 package com.assignment.support.service;
 
-import com.assignment.support.repository.RegionRepositorySupport;
 import com.assignment.support.dto.RegionDto;
+import com.assignment.support.repository.RegionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;
@@ -16,10 +18,10 @@ import java.util.stream.Collectors;
 public class RegionService {
 
     @Autowired
-    private RegionRepositorySupport regionRepositorySupport;
+    private RegionRepository regionRepository;
 
     public List<RegionDto> findBestRegions(int count) {
-        return Optional.ofNullable(regionRepositorySupport.findBestRegions(count))
+        return Optional.ofNullable(regionRepository.findBestRegions(count))
                         .orElseThrow(EntityNotFoundException::new)
                         .stream()
                         .map(RegionDto::of)
@@ -27,7 +29,7 @@ public class RegionService {
     }
 
     public RegionDto findSmallestMaxRateRegion() {
-        return Optional.ofNullable(regionRepositorySupport.findSmallestMaxRateRegion())
+        return Optional.ofNullable(regionRepository.findSmallestMaxRateRegion())
                         .map(RegionDto::of)
                         .orElseThrow(EntityNotFoundException::new);
     }
