@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -25,7 +26,7 @@ public class BaseControllerAdvice {
         return new BaseResponseDto(NOT_FOUND);
     }
 
-    @ExceptionHandler({DataIntegrityViolationException.class, InvalidDataAccessApiUsageException.class,NumberFormatException.class})
+    @ExceptionHandler({DataIntegrityViolationException.class, InvalidDataAccessApiUsageException.class, NumberFormatException.class, MethodArgumentNotValidException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public BaseResponseDto badRequest(Exception e) {
         e.printStackTrace();

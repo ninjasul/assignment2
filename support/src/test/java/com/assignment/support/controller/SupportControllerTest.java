@@ -103,6 +103,34 @@ public class SupportControllerTest extends BaseControllerTest {
     }
 
     @Test
+    public void updateSupport_for_null_region() throws Exception {
+        SupportDto supportDto = SupportDto.builder()
+                .region(null)
+                .build();
+
+        mockMvc.perform(put("/api/support")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(supportDto)))
+                .andDo(print())
+                .andExpect(status().isInternalServerError())
+                .andExpect(jsonPath("$.result", is(FAIL)));
+    }
+
+    @Test
+    public void updateSupport_for_empty_region() throws Exception {
+        SupportDto supportDto = SupportDto.builder()
+                .region("")
+                .build();
+
+        mockMvc.perform(put("/api/support")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(supportDto)))
+                .andDo(print())
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.result", is(FAIL)));
+    }
+
+    @Test
     public void updateSupport_for_wrong_region() throws Exception {
         SupportDto supportDto = SupportDto.builder()
                 .region("뉴욕시")

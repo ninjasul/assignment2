@@ -8,7 +8,9 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
@@ -43,6 +45,18 @@ public class SupportServiceTest extends BaseRepositoryTest {
         }
     }
 
+    @Test(expected = InvalidDataAccessApiUsageException.class)
+    public void findByRegionName_for_null_region() {
+        RegionDto regionDto = new RegionDto(null);
+        supportService.findByRegionName(regionDto);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void findByRegionName_for_empty_region() {
+        RegionDto regionDto = new RegionDto("");
+        supportService.findByRegionName(regionDto);
+    }
+
     @Test(expected = EntityNotFoundException.class)
     public void findByRegionName_for_wrong_region() {
         RegionDto regionDto = new RegionDto("LA");
@@ -67,6 +81,25 @@ public class SupportServiceTest extends BaseRepositoryTest {
             assertThat(foundDto.getReception()).isEqualTo(supportDtos.get(i).getReception());
         }
     }
+
+    @Test(expected = InvalidDataAccessApiUsageException.class)
+    public void updateByRegionName_for_null_region() {
+        SupportDto supportDto = SupportDto.builder()
+                .region(null)
+                .build();
+
+        supportService.updateByRegionName(supportDto);
+    }
+
+    @Test(expected = EntityNotFoundException.class)
+    public void updateByRegionName_for_empty_region() {
+        SupportDto supportDto = SupportDto.builder()
+                .region("")
+                .build();
+
+        supportService.updateByRegionName(supportDto);
+    }
+
 
     @Test(expected = EntityNotFoundException.class)
     public void updateByRegionName_for_wrong_region() {
