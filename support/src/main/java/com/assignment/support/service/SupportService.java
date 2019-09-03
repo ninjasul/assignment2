@@ -1,17 +1,15 @@
 package com.assignment.support.service;
 
-import com.assignment.support.repository.SupportRepository;
+import com.assignment.support.dto.RegionDto;
+import com.assignment.support.dto.SupportDto;
 import com.assignment.support.entity.Region;
 import com.assignment.support.entity.Support;
-import com.assignment.support.dto.SupportDto;
-import com.assignment.support.dto.RegionDto;
+import com.assignment.support.repository.SupportRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;

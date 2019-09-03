@@ -4,10 +4,8 @@ import com.assignment.support.dto.RegionDto;
 import com.assignment.support.repository.RegionRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 import java.util.Optional;

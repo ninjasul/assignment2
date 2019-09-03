@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class RegionRepositorySupportTest extends BaseRepositoryTest {
+public class RegionRepositoryTest extends BaseRepositoryTest {
 
     @Autowired
     private RegionCustomRepositoryImpl regionRepositorySupport;

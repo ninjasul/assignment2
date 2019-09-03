@@ -27,7 +27,7 @@ public class Support {
     @Id @GeneratedValue
     private Long id;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(foreignKey = @ForeignKey(name = "fk_support_to_region"), unique = true)
     private Region region;
 
@@ -125,7 +125,7 @@ public class Support {
     }
 
     void setRates(String rate) {
-        if (rate == null) {
+        if (StringUtils.isEmpty(rate)) {
             minRate = Float.MAX_VALUE;
             maxRate = Float.MAX_VALUE;
             avgRate = Float.MAX_VALUE;
@@ -167,8 +167,14 @@ public class Support {
             avgRate = (minRate + maxRate)/2;
         }
         else {
-            minRate = (Float.compare(rates.get(0), rates.get(1)) >= 0) ? rates.get(1) : rates.get(0);
-            maxRate = (Float.compare(rates.get(0), rates.get(1)) < 0) ? rates.get(1) : rates.get(0);
+            if (rates.get(0) >= rates.get(1)) {
+                minRate = rates.get(1);
+                maxRate = rates.get(0);
+            }
+            else {
+                minRate = rates.get(0);
+                maxRate = rates.get(1);
+            }
             avgRate = (minRate + maxRate)/2;
         }
     }
