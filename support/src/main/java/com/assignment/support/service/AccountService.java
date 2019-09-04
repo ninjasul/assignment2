@@ -24,10 +24,10 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return Optional.ofNullable(accountRepository.findByUsername(username))
+        return Optional.ofNullable(accountRepository.findByUsernameAndPassword(username))
                 .map(account -> User.builder()
                         .username(account.getUsername())
-                        .password(account.getPassword())
+                        .password(passwordEncoder.encode(account.getPassword()))
                         .roles(account.getRole())
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException(username));

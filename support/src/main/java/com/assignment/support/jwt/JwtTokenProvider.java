@@ -28,8 +28,8 @@ public class JwtTokenProvider {
     @Autowired
     private UserDetailsService userDetailsService;
 
-    public String createToken(String userId, List<String> roles) {
-        Claims claims = Jwts.claims().setSubject(userId);
+    public String createToken(String username, List<String> roles) {
+        Claims claims = Jwts.claims().setSubject(username);
         claims.put("roles", roles);
         Date now = new Date();
 
@@ -55,11 +55,11 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
-        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUserId(token));
+        UserDetails userDetails = userDetailsService.loadUserByUsername(this.getUsername(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
 
-    private String getUserId(String token) {
+    private String getUsername(String token) {
         return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
     }
 }
