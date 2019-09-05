@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -19,7 +20,7 @@ import static com.assignment.support.dto.BaseResponseDto.NOT_FOUND;
 @Slf4j
 public class BaseControllerAdvice {
 
-    @ExceptionHandler(EntityNotFoundException.class)
+    @ExceptionHandler({EntityNotFoundException.class, UsernameNotFoundException.class})
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public BaseResponseDto notFound(Exception e) {
         e.printStackTrace();

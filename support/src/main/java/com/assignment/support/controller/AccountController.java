@@ -1,34 +1,36 @@
 package com.assignment.support.controller;
 
 import com.assignment.support.dto.AccountDto;
-import com.assignment.support.dto.BaseResponseDto;
 import com.assignment.support.entity.Account;
+import com.assignment.support.security.JwtTokenProvider;
 import com.assignment.support.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Collections;
 
-import static com.assignment.support.dto.BaseResponseDto.ACCOUNT_CREATION;
-import static com.assignment.support.dto.BaseResponseDto.SUCCESS;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping(consumes = APPLICATION_JSON_UTF8_VALUE, produces = APPLICATION_JSON_UTF8_VALUE)
 public class AccountController {
 
     @Autowired
     private AccountService accountService;
 
+    @Autowired
+    private JwtTokenProvider jwtTokenProvider;
+
     @PostMapping("/signup")
-    public BaseResponseDto signup(@Valid @RequestBody AccountDto accountDto) {
+    public String signup(@Valid @RequestBody AccountDto accountDto) {
         Account newAccount = accountService.createNew(accountDto);
-        return new BaseResponseDto(newAccount.getUsername() + " " + ACCOUNT_CREATION + " " + SUCCESS);
+        return jwtTokenProvider.createToken(newAccount.getUsername(), Collections.singletonList(newAccount.getRole()));
     }
 
     @PostMapping("/signin")
-    public BaseResponseDto signin(@Valid @RequestParam AccountDto accountDto) {
-        accountService.loadUserByUsername(accountDto.getUsername());
-        return new BaseResponseDto(ACCOUNT_CREATION + " " + SUCCESS);
+    public String signin(@Valid @RequestBody AccountDto accountDto) {
+        Account account = accountService.findByUsernameAndPassword(accountDto);
+        return jwtTokenProvider.createToken(account.getUsername(), Collections.singletonList(account.getRole()));
     }
-
 }

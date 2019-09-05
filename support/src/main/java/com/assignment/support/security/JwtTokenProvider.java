@@ -1,5 +1,6 @@
-package com.assignment.support.jwt;
+package com.assignment.support.security;
 
+import com.google.common.net.HttpHeaders;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -15,15 +16,16 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class JwtTokenProvider {
 
+    public static final String TOKEN_PREFIX = "Bearer ";
+    private static final long TOKEN_VALID_MILLISEC = 60000L;
+
     @Value("spring.jwt.secret")
     private String secretKey;
-
-    @Value("spring.jwt.valid.millisec")
-    private long tokenValidMillisecond;
 
     @Autowired
     private UserDetailsService userDetailsService;
@@ -36,13 +38,16 @@ public class JwtTokenProvider {
         return Jwts.builder()
                     .setClaims(claims)
                     .setIssuedAt(now)
-                    .setExpiration(new Date(now.getTime() + tokenValidMillisecond))
+                    .setExpiration(new Date(now.getTime() + TOKEN_VALID_MILLISEC))
                     .signWith(SignatureAlgorithm.HS256, secretKey)
                     .compact();
     }
 
     public String resolveToken(HttpServletRequest request) {
-        return request.getHeader("Bearer Token");
+        return Optional.of(request)
+                        .map(req -> req.getHeader(HttpHeaders.AUTHORIZATION))
+                        .map(header -> header.replace(TOKEN_PREFIX, ""))
+                        .orElse(null);
     }
 
     public boolean validateToken(String token) {

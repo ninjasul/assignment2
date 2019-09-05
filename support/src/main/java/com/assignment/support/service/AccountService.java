@@ -3,6 +3,7 @@ package com.assignment.support.service;
 import com.assignment.support.dto.AccountDto;
 import com.assignment.support.entity.Account;
 import com.assignment.support.repository.AccountRepository;
+import com.assignment.support.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.Optional;
 
 @Service
@@ -24,13 +26,18 @@ public class AccountService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return Optional.ofNullable(accountRepository.findByUsernameAndPassword(username))
+        return Optional.ofNullable(accountRepository.findByUsername(username))
                 .map(account -> User.builder()
                         .username(account.getUsername())
                         .password(passwordEncoder.encode(account.getPassword()))
                         .roles(account.getRole())
                         .build())
                 .orElseThrow(() -> new UsernameNotFoundException(username));
+    }
+
+    public Account findByUsernameAndPassword(AccountDto accountDto) {
+        return Optional.ofNullable(accountRepository.findByUsernameAndPassword(accountDto.getUsername(), passwordEncoder.encode(accountDto.getPassword())))
+                .orElseThrow(() -> new UsernameNotFoundException(accountDto.getUsername()));
     }
 
     public Account createNew(AccountDto accountDto) {
