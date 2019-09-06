@@ -21,12 +21,12 @@ public class RegionController {
     @Autowired
     private RegionService regionService;
 
-    @GetMapping(value = "/best/{count}")
+    @RequestMapping(value = "/best/{count}")
     public List<RegionDto> queryBestRegions(@PathVariable int count) {
         return regionService.findBestRegions(count);
     }
 
-    @GetMapping(value = "/smallest")
+    @RequestMapping(value = "/smallest")
     public RegionDto querySmallestRegion() {
         return regionService.findSmallestMaxRateRegion();
     }

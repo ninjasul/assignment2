@@ -32,4 +32,13 @@ public class AccountDto {
                 .username(account.getUsername())
                 .build();
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder("AccountDto{");
+        sb.append("username='").append(username).append('\'');
+        sb.append(", password='").append(password).append('\'');
+        sb.append('}');
+        return sb.toString();
+    }
 }
