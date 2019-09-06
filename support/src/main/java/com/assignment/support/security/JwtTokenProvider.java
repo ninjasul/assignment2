@@ -21,10 +21,13 @@ import java.util.Optional;
 public class JwtTokenProvider {
 
     public static final String TOKEN_PREFIX = "Bearer ";
-    private static final long TOKEN_VALID_MILLISEC = 60000L;
+    //private static final long TOKEN_VALID_MILLISEC = 60000L;
 
     @Value("${spring.jwt.secret}")
     private String secretKey;
+
+    @Value("${spring.jwt.token.valid.millisec}")
+    private Integer TOKEN_VALID_MILLISEC;
 
     @Autowired
     private AccountService accountService;
@@ -52,7 +55,7 @@ public class JwtTokenProvider {
     public boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
-            return claims.getBody().getExpiration().compareTo(new Date()) >= 0;
+            return claims.getBody().getExpiration().after(new Date());
         } catch (Exception e) {
             return false;
         }
@@ -68,6 +71,8 @@ public class JwtTokenProvider {
             return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
         } catch (ExpiredJwtException e) {
             return e.getClaims().getSubject();
+        } catch (Exception e) {
+            return null;
         }
     }
 }

@@ -26,7 +26,7 @@ public class SupportController {
     @Autowired
     private CsvReadService csvReadService;
 
-    @GetMapping("/insert")
+    @RequestMapping("/insert")
     public BaseResponseDto insert() throws Exception {
         csvReadService.readCsvAndSaveDb();
         return new BaseResponseDto(SUCCESS);
