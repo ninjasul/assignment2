@@ -67,7 +67,6 @@ public class AccountService implements UserDetailsService {
         }
 
         Authentication auth = jwtTokenProvider.getAuthentication(token);
-        log.info("auth name: {}", auth.getName());
         return jwtTokenProvider.createToken(auth.getName(), getRoles(auth));
     }
 
